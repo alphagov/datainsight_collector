@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+require 'bundler/setup'
+Bundler.require
+
+require "datainsight/collector"
+
+config = File.join(Dir.pwd, 'config', 'collector.rb')
+if File.exists?(config)
+  require config
+else
+  raise "Configuration not found. Expected: #{config}"
+end
+Datainsight::Logging.configure()
+
+include GLI
+
+version 0.1
+
+DataInsight::Collector.options.each do |option, description|
+  desc(description)
+  flag [option.to_s.chars.first.to_sym, option]
+end
+
+desc 'Print out the collected content'
+command :print do |c|
+  c.action do |global_options, options, args|
+    DataInsight::Collector::Runner.new.print(global_options)
+  end
+end
+
+desc 'Publish the collected content to the queue'
+command :broadcast do |c|
+  c.action do |global_options, options, args|
+    DataInsight::Collector::Runner.new.broadcast(global_options)
+  end
+end
+
+on_error do |error|
+  DataInsight::Collector.handle_error(error)
+end
+
+exit GLI.run(ARGV)
