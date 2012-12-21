@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
-require 'bundler/setup'
-Bundler.require
-
+require "gli"
+require "datainsight_logging"
 require "datainsight/collector"
 
 config = File.join(Dir.pwd, 'config', 'collector.rb')
