@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.version       = "0.0.1"
 
   gem.add_dependency "bunny"
-  gem.add_dependency "gli"
+  gem.add_dependency "gli", "1.6.0"
   gem.add_dependency "datainsight_logging"
 
   gem.add_development_dependency "rake"
