@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 require "gli"
+require "bunny"
 require "datainsight_logging"
+
 require "datainsight/collector"
 
 config = File.join(Dir.pwd, 'config', 'collector.rb')
