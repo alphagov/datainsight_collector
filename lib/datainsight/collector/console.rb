@@ -1,3 +1,5 @@
+require "json"
+
 module DataInsight
   module Collector
     class Console
