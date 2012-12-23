@@ -18,7 +18,7 @@ module DataInsight
       private
 
       def run(collector, destination)
-        destination.push(collector.response)
+        destination.push(collector.messages)
       end
 
       def collector(options)

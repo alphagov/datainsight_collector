@@ -8,7 +8,7 @@ module DataInsight
       {}
     end
 
-    def self.collector(options)
+    def self.messages(options)
       raise "override this"
     end
 

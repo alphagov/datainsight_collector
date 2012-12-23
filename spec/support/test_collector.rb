@@ -1,9 +1,9 @@
 class TestCollector
-  def initialize(response)
-    @response = response
+  def initialize(messages)
+    @messages = messages
   end
 
-  def response
-    @response
+  def messages
+    @messages
   end
 end
