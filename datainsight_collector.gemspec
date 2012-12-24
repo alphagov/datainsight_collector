@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "datainsight_collector"
   gem.require_paths = %w(lib)
-  gem.version       = "0.0.3"
+  gem.version       = "0.0.4"
 
   gem.add_dependency "bunny"
   gem.add_dependency "gli", "1.6.0"
