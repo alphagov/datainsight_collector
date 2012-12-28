@@ -5,9 +5,10 @@ module DataInsight
     class Console
 
       def push(messages)
-        puts messages.each(&:to_json)
+        messages.each do |message|
+          puts message.to_json
+        end
       end
-
     end
   end
 end
