@@ -3,22 +3,36 @@ require "spec_helper"
 describe DataInsight::Collector::Runner do
 
   it "should print collected data to the console" do
-    DataInsight::Collector.stub(:collector).and_return(TestCollector.new(:collected_data))
-    DataInsight::Collector::Console.any_instance.should_receive(:push).with(:collected_data)
+    runner = double("collector")
 
-    DataInsight::Collector::Runner.new.print({})
+    DataInsight::Collector::Runner.stub(:new).and_return(runner)
+    DataInsight::Collector.stub(:collector).and_return(:a_collector)
+
+    runner.should_receive(:run).with(:a_collector, kind_of(DataInsight::Collector::Console))
+
+    DataInsight::Collector::Runner.print({})
   end
 
   it "should send collected data to a queue" do
-    DataInsight::Collector.stub(:collector).and_return(TestCollector.new(:collected_data))
-    DataInsight::Collector.stub(:queue_name).and_return(:destination_queue)
-    DataInsight::Collector.stub(:queue_routing_key).and_return(:a_routing_key)
+    runner = double("collector")
 
-    queue = double("BunnyQueue")
-    DataInsight::Collector::BunnyQueue.should_receive(:new).with(:destination_queue, :a_routing_key).and_return(queue)
-    queue.should_receive(:push).with(:collected_data)
+    DataInsight::Collector::Runner.stub(:new).and_return(runner)
+    DataInsight::Collector.stub(:collector).and_return(:a_collector)
+    DataInsight::Collector.stub(:queue_name)
+    DataInsight::Collector.stub(:queue_routing_key)
 
-    DataInsight::Collector::Runner.new.broadcast({})
+    runner.should_receive(:run).with(:a_collector, kind_of(DataInsight::Collector::BunnyQueue))
+
+    DataInsight::Collector::Runner.broadcast({})
+  end
+
+  it "should send a collected message to a destination in json format" do
+    collector = TestCollector.new([{title: "this is a message"}])
+    queue = double(queue)
+    queue.should_receive(:push).with(["{\"title\":\"this is a message\"}"])
+
+    runner = DataInsight::Collector::Runner.new
+    runner.run(collector, queue)
   end
 
 end

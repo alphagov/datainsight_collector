@@ -6,30 +6,26 @@ module DataInsight
 
       end
 
-      def print(options)
-        run(collector(options), console)
+      def self.print(options)
+        Runner.new.run(collector(options), Console.new)
       end
 
-      def broadcast(options)
-        run(collector(options), queue(options))
+      def self.broadcast(options)
+        Runner.new.run(collector(options), queue(options))
+      end
+
+      def run(collector, destination)
+        destination.push(collector.messages.map {|msg| msg.to_json})
       end
 
 
       private
 
-      def run(collector, destination)
-        destination.push(collector.messages)
-      end
-
-      def collector(options)
+      def self.collector(options)
         Collector.collector(options)
       end
 
-      def console
-        Console.new
-      end
-
-      def queue(options)
+      def self.queue(options)
         BunnyQueue.new(Collector.queue_name(options), Collector.queue_routing_key(options))
       end
 

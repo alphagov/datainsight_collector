@@ -25,14 +25,14 @@ end
 desc 'Print out the collected content'
 command :print do |c|
   c.action do |global_options, options, args|
-    DataInsight::Collector::Runner.new.print(global_options)
+    DataInsight::Collector::Runner.print(global_options)
   end
 end
 
 desc 'Publish the collected content to the queue'
 command :broadcast do |c|
   c.action do |global_options, options, args|
-    DataInsight::Collector::Runner.new.broadcast(global_options)
+    DataInsight::Collector::Runner.broadcast(global_options)
   end
 end
 

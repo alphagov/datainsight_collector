@@ -6,7 +6,7 @@ module DataInsight
 
       def push(messages)
         messages.each do |message|
-          puts message.to_json
+          puts message
         end
       end
     end

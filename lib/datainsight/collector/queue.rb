@@ -10,9 +10,9 @@ module DataInsight
       def push(messages)
         Bunny.run(ENV['AMQP']) do |client|
           exchange = client.exchange(@name, :type => :topic)
-          messages.each do |msg|
-            logger.debug { "Pushing to queue message: #{msg}" }
-            exchange.publish(msg.to_json, :key => @key)
+          messages.each do |message|
+            logger.debug { "Pushing to queue message: #{message}" }
+            exchange.publish(message, :key => @key)
           end
         end
       end
