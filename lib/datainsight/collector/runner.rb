@@ -15,7 +15,7 @@ module DataInsight
       end
 
       def run(collector, destination)
-        destination.push(collector.messages.map {|msg| msg.to_json})
+        destination.push(collector.messages.map {|msg| msg.to_json(ascii_only: true)})
       end
 
 

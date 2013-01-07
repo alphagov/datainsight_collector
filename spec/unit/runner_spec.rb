@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require "spec_helper"
 
 describe DataInsight::Collector::Runner do
@@ -29,7 +31,25 @@ describe DataInsight::Collector::Runner do
   it "should send a collected message to a destination in json format" do
     collector = TestCollector.new([{title: "this is a message"}])
     queue = double(queue)
-    queue.should_receive(:push).with(["{\"title\":\"this is a message\"}"])
+    queue.should_receive(:push).with(['{"title":"this is a message"}'])
+
+    runner = DataInsight::Collector::Runner.new
+    runner.run(collector, queue)
+  end
+
+  it "should convert to json all the messages" do
+    collector = TestCollector.new([{id: 1}, {id: 2}])
+    queue = double(queue)
+    queue.should_receive(:push).with(['{"id":1}', '{"id":2}'])
+
+    runner = DataInsight::Collector::Runner.new
+    runner.run(collector, queue)
+  end
+
+  it "should escape unicode characters in messages" do
+    collector = TestCollector.new([{title: "è"}])
+    queue = double(queue)
+    queue.should_receive(:push).with(['{"title":"\u00e8"}'])
 
     runner = DataInsight::Collector::Runner.new
     runner.run(collector, queue)
