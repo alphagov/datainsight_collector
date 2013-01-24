@@ -9,7 +9,7 @@ config = File.join(Dir.pwd, 'config', 'collector.rb')
 if File.exists?(config)
   require config
 else
-  raise "Configuration not found. Expected: #{config}"
+  raise "Configuration not found. Please create a collector initializer at: #{config}"
 end
 Datainsight::Logging.configure()
 
@@ -38,6 +38,7 @@ end
 
 on_error do |error|
   DataInsight::Collector.handle_error(error)
+  true
 end
 
 exit GLI.run(ARGV)
