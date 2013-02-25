@@ -13,7 +13,7 @@ end
 
 desc "publish gem on gemfury"
 task :publish_gem do |task|
-  gem = GemPublisher.publish_if_updated("datainsight_collector.gemspec", :gemfury)
+  gem = GemPublisher.publish_if_updated("datainsight_collector.gemspec", :gemfury, :as => 'govuk')
   puts "Published #{gem}" if gem
 end
 
