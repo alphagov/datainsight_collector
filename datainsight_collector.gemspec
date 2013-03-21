@@ -11,11 +11,12 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "datainsight_collector"
   gem.require_paths = %w(lib)
-  gem.version       = "0.0.9"
+  gem.version       = "0.0.10"
 
   gem.add_dependency "bunny"
   gem.add_dependency "gli", "1.6.0"
   gem.add_dependency "datainsight_logging"
+  gem.add_dependency "tzinfo", "~> 0.3.37"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
