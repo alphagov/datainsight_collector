@@ -15,7 +15,12 @@ module DataInsight
       end
 
       def run(collector, destination)
-        destination.push(collector.messages.map {|msg| msg.to_json(ascii_only: true)})
+        messages = Enumerator.new do |yielder|
+          collector.messages.each do |message|
+            yielder.yield(message.to_json(ascii_only: true))
+          end
+        end
+        destination.push(messages)
       end
 
 

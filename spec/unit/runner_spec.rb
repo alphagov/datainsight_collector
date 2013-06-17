@@ -31,7 +31,9 @@ describe DataInsight::Collector::Runner do
   it "should send a collected message to a destination in json format" do
     collector = TestCollector.new([{title: "this is a message"}])
     queue = double(queue)
-    queue.should_receive(:push).with(['{"title":"this is a message"}'])
+    queue.should_receive(:push) do |messages|
+      messages.to_a.should == ['{"title":"this is a message"}']
+    end
 
     runner = DataInsight::Collector::Runner.new
     runner.run(collector, queue)
@@ -40,7 +42,9 @@ describe DataInsight::Collector::Runner do
   it "should convert to json all the messages" do
     collector = TestCollector.new([{id: 1}, {id: 2}])
     queue = double(queue)
-    queue.should_receive(:push).with(['{"id":1}', '{"id":2}'])
+    queue.should_receive(:push) do |messages|
+      messages.to_a.should == ['{"id":1}', '{"id":2}']
+    end
 
     runner = DataInsight::Collector::Runner.new
     runner.run(collector, queue)
@@ -49,8 +53,30 @@ describe DataInsight::Collector::Runner do
   it "should escape unicode characters in messages" do
     collector = TestCollector.new([{title: "è"}])
     queue = double(queue)
-    queue.should_receive(:push).with(['{"title":"\u00e8"}'])
+    queue.should_receive(:push) do |messages|
+      messages.to_a.should == ['{"title":"\u00e8"}']
+    end
 
+    runner = DataInsight::Collector::Runner.new
+    runner.run(collector, queue)
+  end
+
+  it "should lazily evaluate the message list and send as soon as it receives" do
+    messages = Enumerator.new do |yielder|
+      [{id: 1}, {id: 2}].each do |message|
+        sleep(0.1)
+        yielder.yield(message)
+      end
+    end
+
+    collector = TestCollector.new(messages)
+    queue = double(queue)
+    queue.should_receive(:push) do |messages|
+      start_time = Time.now
+      messages.to_a
+      (Time.now - start_time).should >= 0.2
+    end
+  
     runner = DataInsight::Collector::Runner.new
     runner.run(collector, queue)
   end
