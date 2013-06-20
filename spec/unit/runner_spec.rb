@@ -62,9 +62,10 @@ describe DataInsight::Collector::Runner do
   end
 
   it "should lazily evaluate the message list and send as soon as it receives" do
+    counter = 0
     messages = Enumerator.new do |yielder|
       [{id: 1}, {id: 2}].each do |message|
-        sleep(0.1)
+        counter += 1
         yielder.yield(message)
       end
     end
@@ -72,9 +73,9 @@ describe DataInsight::Collector::Runner do
     collector = TestCollector.new(messages)
     queue = double(queue)
     queue.should_receive(:push) do |messages|
-      start_time = Time.now
+      counter.should == 0
       messages.to_a
-      (Time.now - start_time).should >= 0.2
+      counter.should == 2
     end
   
     runner = DataInsight::Collector::Runner.new
