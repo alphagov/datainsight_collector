@@ -11,9 +11,9 @@ Cucumber::Rake::Task.new(:features) do |t|
   t.cucumber_opts = "features --format pretty"
 end
 
-desc "publish gem on gemfury"
+desc "publish gem on rubygems"
 task :publish_gem do |task|
-  gem = GemPublisher.publish_if_updated("datainsight_collector.gemspec", :gemfury, :as => 'govuk')
+  gem = GemPublisher.publish_if_updated("datainsight_collector.gemspec", :rubygems)
   puts "Published #{gem}" if gem
 end
 
